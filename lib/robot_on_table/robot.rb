@@ -32,16 +32,10 @@ module RobotOnTable
     end
 
     def move
-      case @facing
-        when 'north'
-          @y += 1 if able_to_move_north?
-        when 'east'
-          @x += 1 if able_to_move_east?
-        when 'south'
-          @y -= 1 if able_to_move_south?
-        when 'west'
-          @x -= 1 if able_to_move_west?
-      end
+      @y = @y.succ if able_to_move_north?
+      @x = @x.succ if able_to_move_east?
+      @y = @y.pred if able_to_move_south?
+      @x = @x.pred if able_to_move_west?
     end
 
     def turn_right
@@ -70,7 +64,7 @@ module RobotOnTable
       end
 
       def validate_position!
-        raise StandardError if !valid_position? || !valid_facing?
+        raise if !valid_position? || !valid_facing?
       end
 
       def valid_position?
@@ -82,27 +76,27 @@ module RobotOnTable
       end
 
       def valid_x_position?
-        (0...MAX_X).include? @x
+        (0...MAX_X).cover? @x
       end
 
       def valid_y_position?
-        (0...MAX_Y).include? @y
+        (0...MAX_Y).cover? @y
       end
 
       def able_to_move_north?
-        @y < MAX_Y - 1
+        @facing == 'north' && @y < MAX_Y.pred
       end
 
       def able_to_move_east?
-        @x < MAX_X - 1
+        @facing == 'east' && @x < MAX_X.pred
       end
 
       def able_to_move_south?
-        @y > 0
+        @facing == 'south' && @y > 0
       end
 
       def able_to_move_west?
-        @x > 0
+        @facing == 'west' && @x > 0
       end
   end
 end
