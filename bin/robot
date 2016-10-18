@@ -2,22 +2,21 @@
 
 require 'bundler/setup'
 require 'robot_on_table'
+require 'readline'
 
-loop do
-  print 'Your command: '
-
+while buf = Readline.readline('Your command: ', true)
   begin
-    @command_parser = RobotOnTable::CommandParser.new(gets)
-  rescue StandardError => e
-    puts e
-  end
+    @command_parser = RobotOnTable::CommandParser.new(buf)
 
-  begin
     if @command_parser.initialize_command?
       @robot = RobotOnTable::Robot.new *@command_parser.params
     else
       @robot.send @command_parser.robot_command
     end
+  rescue ArgumentError => e
+    puts e
   rescue StandardError
+
   end
 end
+

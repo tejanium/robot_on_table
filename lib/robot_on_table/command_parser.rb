@@ -35,7 +35,7 @@ module RobotOnTable
       def validate_command!
         return if valid_command?
 
-        raise "Invalid command! Available commands are: #{ VALID_COMMANDS.keys.map(&:upcase) }"
+        raise ArgumentError, "Invalid command! Available commands are: #{ VALID_COMMANDS.keys.map(&:upcase) }"
       end
 
       def valid_command?
