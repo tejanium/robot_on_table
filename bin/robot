@@ -4,19 +4,29 @@ require 'bundler/setup'
 require 'robot_on_table'
 require 'readline'
 
-while buf = Readline.readline('Your command: ', true)
-  begin
-    @command_parser = RobotOnTable::CommandParser.new(buf)
+def read_command(command)
+  @command_parser = RobotOnTable::CommandParser.new(command)
 
-    if @command_parser.initialize_command?
-      @robot = RobotOnTable::Robot.new *@command_parser.params
-    else
-      @robot.send @command_parser.robot_command
-    end
-  rescue ArgumentError => e
-    puts e
-  rescue StandardError
+  if @command_parser.initialize_command?
+    @robot = RobotOnTable::Robot.new *@command_parser.params
+  else
+    @robot.send @command_parser.robot_command
+  end
+rescue ArgumentError => e
+  puts e
+rescue StandardError
+end
 
+def cli_mode
+  while command = Readline.readline('Your command: ', true)
+    read_command(command)
   end
 end
 
+def file_mode(file_path)
+  File.foreach(file_path) do |line|
+    read_command(line)
+  end
+end
+
+ARGV.empty? ? cli_mode : file_mode(ARGV.first)

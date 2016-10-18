@@ -28,7 +28,7 @@ module RobotOnTable
     end
 
     def print_report
-      puts report
+      puts report.upcase
     end
 
     def move
