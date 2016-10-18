@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'robot_on_table'
+
+loop do
+  print 'Your command: '
+
+  begin
+    @command_parser = RobotOnTable::CommandParser.new(gets)
+  rescue StandardError => e
+    puts e
+  end
+
+  begin
+    if @command_parser.initialize_command?
+      @robot = RobotOnTable::Robot.new *@command_parser.params
+    else
+      @robot.send @command_parser.robot_command
+    end
+  rescue StandardError
+  end
+end
